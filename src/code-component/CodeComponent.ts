@@ -1,0 +1,106 @@
+import { editor } from "monaco-editor";
+
+export class CodeComponent extends HTMLElement {
+	private static readonly sizeAndLineHeightDifference = 5;
+	private static readonly observedAttributes = [
+		"lang",
+		"size"
+	] as const;
+
+	private readonly shadow: ShadowRoot;
+	private readonly model: editor.ITextModel;
+	private readonly editor: editor.IStandaloneCodeEditor;
+
+	public get lang(): string {
+		return this.getAttribute("lang");
+	}
+	public set lang(value: string) {
+		if (this.lang !== value) {
+			this.setAttribute("lang", value);
+			this.updateLang();
+		}
+	}
+	private updateLang(): void {
+		
+	}
+
+	public get size(): number {
+		return parseInt(this.getAttribute("size")) || 14;
+	}
+	public set size(value: number) {
+		if (this.size !== value) {
+			this.setAttribute("size", value.toString());
+			this.updateSize();
+		}
+	}
+	private updateSize(): void {
+		this.editor.updateOptions({
+			lineHeight: this.size + CodeComponent.sizeAndLineHeightDifference,
+			fontSize: this.size
+		});
+	}
+
+	public constructor() {
+		//#region Local functions
+		const createShadow: () => ShadowRoot = () => {
+			const shadow = this.attachShadow({ mode: "closed" });
+			document.head.querySelectorAll("style").forEach(s => shadow.appendChild(s.cloneNode(true)));
+
+			return shadow;
+		};
+		const createContainer: (size: number, lineCount: number) => HTMLElement = (size, lineCount) => {
+			const container = document.createElement("div");
+			container.style.width = "100%";
+			container.style.height = `calc(${size + CodeComponent.sizeAndLineHeightDifference}px * ${lineCount})`;
+			container.style.position = "relative";
+
+			return container;
+		};
+		const createEditor: (model: editor.ITextModel, size: number, container: HTMLElement) => editor.IStandaloneCodeEditor = (model, size, container) => {
+			return editor.create(
+				container,
+				{
+					model,
+
+					lineHeight: size + CodeComponent.sizeAndLineHeightDifference,
+					fontSize: size,
+					theme: "vs-dark",
+					minimap: {
+						enabled: false
+					},
+					overviewRulerLanes: 0,
+					scrollBeyondLastLine: false,
+					wordWrap: "on",
+					contextmenu: false,
+					lineNumbersMinChars: 1,
+					multiCursorModifier: "ctrlCmd"
+				}
+			);
+		};
+		//#endregion Local functions
+
+		super();
+
+		this.model = editor.createModel(this.innerHTML.trim(), this.lang);
+
+		this.shadow = createShadow();
+
+		const container = createContainer(this.size, this.model.getLineCount());
+		this.shadow.appendChild(container);
+
+		this.editor = createEditor(this.model, this.size, container);
+	}
+
+	public attributeChangedCallback(name: (typeof CodeComponent.observedAttributes)[number], oldValue: string, newValue: string): void {
+		if (oldValue !== newValue) {
+			switch (name) {
+				case "lang":
+					this.updateLang();
+					break;
+				case "size":
+					this.updateSize();
+					break;
+			}
+		}
+	}
+}
