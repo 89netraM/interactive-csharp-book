@@ -77,6 +77,23 @@ export class CodeComponent extends HTMLElement {
 				}
 			);
 		};
+		const bindEventListeners: () => void = () => {
+			const bindResizeListener: () => void = () => {
+				let oldWidth = this.getBoundingClientRect().width;
+
+				const resizeCallback: () => void = () => {
+					const rect = this.getBoundingClientRect();
+					if (oldWidth !== rect.width) {
+						oldWidth = rect.width;
+						this.onResize();
+					}
+				};
+	
+				window.addEventListener("resize", resizeCallback, false);
+			};
+
+			bindResizeListener();
+		};
 		//#endregion Local functions
 
 		super();
@@ -89,6 +106,12 @@ export class CodeComponent extends HTMLElement {
 		this.shadow.appendChild(container);
 
 		this.editor = createEditor(this.model, this.size, container);
+
+		bindEventListeners();
+	}
+
+	private onResize(): void {
+		this.editor.layout();
 	}
 
 	public attributeChangedCallback(name: (typeof CodeComponent.observedAttributes)[number], oldValue: string, newValue: string): void {
