@@ -7,7 +7,6 @@ export class CodeComponent extends HTMLElement {
 		"size"
 	] as const;
 
-	private readonly shadow: ShadowRoot;
 	private readonly model: editor.ITextModel;
 	private readonly editor: editor.IStandaloneCodeEditor;
 
@@ -31,12 +30,6 @@ export class CodeComponent extends HTMLElement {
 
 	public constructor() {
 		//#region Local functions
-		const createShadow: () => ShadowRoot = () => {
-			const shadow = this.attachShadow({ mode: "closed" });
-			document.head.querySelectorAll("style").forEach(s => shadow.appendChild(s.cloneNode(true)));
-
-			return shadow;
-		};
 		const createContainer: () => HTMLElement = () => {
 			const container = document.createElement("div");
 			container.style.width = "100%";
@@ -45,9 +38,11 @@ export class CodeComponent extends HTMLElement {
 
 			return container;
 		};
-		const getText: () => string = () => {
+		const extractText: () => string = () => {
 			if (this.childNodes.length > 0) {
-				return this.childNodes[0].nodeValue.trim();
+				const text = this.childNodes[0].nodeValue.trim();
+				this.removeChild(this.childNodes[0]);
+				return text;
 			}
 			else {
 				return "";
@@ -101,12 +96,10 @@ export class CodeComponent extends HTMLElement {
 		super();
 
 		this.language = this.getAttribute("language");
-		this.model = editor.createModel(getText(), this.language);
-
-		this.shadow = createShadow();
+		this.model = editor.createModel(extractText(), this.language);
 
 		const container = createContainer();
-		this.shadow.appendChild(container);
+		this.appendChild(container);
 
 		this.editor = createEditor(this.model, this.size, container);
 		container.style.height = `${this.editor.getContentHeight()}px`;
