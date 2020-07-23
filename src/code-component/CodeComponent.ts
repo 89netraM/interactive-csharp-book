@@ -56,6 +56,14 @@ export class CodeComponent extends HTMLElement {
 
 			return container;
 		};
+		const getText: () => string = () => {
+			if (this.childNodes.length > 0) {
+				return this.childNodes[0].nodeValue.trim();
+			}
+			else {
+				return "";
+			}
+		};
 		const createEditor: (model: editor.ITextModel, size: number, container: HTMLElement) => editor.IStandaloneCodeEditor = (model, size, container) => {
 			return editor.create(
 				container,
@@ -102,7 +110,7 @@ export class CodeComponent extends HTMLElement {
 
 		super();
 
-		this.model = editor.createModel(this.innerHTML.trim(), this.lang);
+		this.model = editor.createModel(getText(), this.lang);
 
 		this.shadow = createShadow();
 
