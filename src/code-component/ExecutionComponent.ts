@@ -103,13 +103,13 @@ export class ExecutionComponent extends HTMLElement {
 		this.playInner = createPlayInner();
 		this.playingInner = createPlayingInner();
 		this.playButton.appendChild(this.playInner);
-		this.playButton.addEventListener("click", this.onPlayClick.bind(this), false);
+		this.playButton.addEventListener("click", this.play.bind(this), false);
 
 		const info = createInfo(ExecutionComponent.infoText);
 		commandBar.appendChild(info);
 	}
 
-	private onPlayClick(): void {
+	public play(): void {
 		if (!this.isPlaying) {
 			this.executeCode();
 		}
@@ -124,7 +124,7 @@ export class ExecutionComponent extends HTMLElement {
 		);
 	}
 
-	public async executeCode(): Promise<void> {
+	private async executeCode(): Promise<void> {
 		this.setPlayingState(true);
 		// await ...
 		this.setPlayingState(false);

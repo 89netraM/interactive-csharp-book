@@ -1,4 +1,4 @@
-import { editor } from "monaco-editor";
+import { editor, KeyMod, KeyCode } from "monaco-editor";
 import { ExecutionComponent } from "./ExecutionComponent";
 
 export class CodeComponent extends HTMLElement {
@@ -54,7 +54,7 @@ export class CodeComponent extends HTMLElement {
 			}
 		};
 		const createEditor: (model: editor.ITextModel, size: number, container: HTMLElement) => editor.IStandaloneCodeEditor = (model, size, container) => {
-			return editor.create(
+			const e = editor.create(
 				container,
 				{
 					model,
@@ -78,6 +78,17 @@ export class CodeComponent extends HTMLElement {
 					multiCursorModifier: "ctrlCmd"
 				}
 			);
+			e.addAction({
+				id: "execution-run",
+				label: "Run",
+				keybindings: [
+					KeyCode.F5,
+					KeyMod.CtrlCmd | KeyCode.KEY_R
+				],
+				run: () => this.executioner.play()
+			});
+
+			return e;
 		};
 		const bindEventListeners: () => void = () => {
 			const bindResizeListener: () => void = () => {
