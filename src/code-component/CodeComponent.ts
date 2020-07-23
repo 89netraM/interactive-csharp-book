@@ -72,8 +72,9 @@ export class CodeComponent extends HTMLElement {
 					overviewRulerLanes: 0,
 					scrollBeyondLastLine: false,
 					wordWrap: "on",
+					wrappingIndent: "indent",
 					contextmenu: false,
-					lineNumbersMinChars: 1,
+					lineNumbersMinChars: 3,
 					multiCursorModifier: "ctrlCmd"
 				}
 			);
