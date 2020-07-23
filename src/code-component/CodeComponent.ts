@@ -51,7 +51,6 @@ export class CodeComponent extends HTMLElement {
 		const createContainer: (size: number, lineCount: number) => HTMLElement = (size, lineCount) => {
 			const container = document.createElement("div");
 			container.style.width = "100%";
-			container.style.height = `calc(${size + CodeComponent.sizeAndLineHeightDifference}px * ${lineCount})`;
 			container.style.position = "relative";
 
 			return container;
@@ -106,6 +105,8 @@ export class CodeComponent extends HTMLElement {
 		this.shadow.appendChild(container);
 
 		this.editor = createEditor(this.model, this.size, container);
+		container.style.height = `${this.editor.getScrollHeight()}px`;
+		this.editor.layout();
 
 		bindEventListeners();
 	}
