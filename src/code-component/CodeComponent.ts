@@ -67,6 +67,10 @@ export class CodeComponent extends HTMLElement {
 					minimap: {
 						enabled: false
 					},
+					scrollbar: {
+						alwaysConsumeMouseWheel: false
+					},
+					smoothScrolling: true,
 					overviewRulerLanes: 0,
 					scrollBeyondLastLine: false,
 					wordWrap: "on",
