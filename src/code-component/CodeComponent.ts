@@ -3,7 +3,7 @@ import { editor } from "monaco-editor";
 export class CodeComponent extends HTMLElement {
 	private static readonly sizeAndLineHeightDifference = 5;
 	private static readonly observedAttributes = [
-		"lang",
+		"language",
 		"size"
 	] as const;
 
@@ -11,18 +11,7 @@ export class CodeComponent extends HTMLElement {
 	private readonly model: editor.ITextModel;
 	private readonly editor: editor.IStandaloneCodeEditor;
 
-	public get lang(): string {
-		return this.getAttribute("lang");
-	}
-	public set lang(value: string) {
-		if (this.lang !== value) {
-			this.setAttribute("lang", value);
-			this.updateLang();
-		}
-	}
-	private updateLang(): void {
-		
-	}
+	public readonly language: string;
 
 	public get size(): number {
 		return parseInt(this.getAttribute("size")) || 14;
@@ -110,7 +99,8 @@ export class CodeComponent extends HTMLElement {
 
 		super();
 
-		this.model = editor.createModel(getText(), this.lang);
+		this.language = this.getAttribute("language");
+		this.model = editor.createModel(getText(), this.language);
 
 		this.shadow = createShadow();
 
@@ -129,10 +119,12 @@ export class CodeComponent extends HTMLElement {
 	}
 
 	public attributeChangedCallback(name: (typeof CodeComponent.observedAttributes)[number], oldValue: string, newValue: string): void {
-		if (oldValue !== newValue) {
+		if (oldValue != null && oldValue !== newValue) {
 			switch (name) {
-				case "lang":
-					this.updateLang();
+				case "language":
+					if (newValue !== this.language) {
+						this.setAttribute("language", this.language);
+					}
 					break;
 				case "size":
 					this.updateSize();
