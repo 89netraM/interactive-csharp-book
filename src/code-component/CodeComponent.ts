@@ -48,9 +48,10 @@ export class CodeComponent extends HTMLElement {
 
 			return shadow;
 		};
-		const createContainer: (size: number, lineCount: number) => HTMLElement = (size, lineCount) => {
+		const createContainer: () => HTMLElement = () => {
 			const container = document.createElement("div");
 			container.style.width = "100%";
+			container.style.height = "9999px";
 			container.style.position = "relative";
 
 			return container;
@@ -105,11 +106,11 @@ export class CodeComponent extends HTMLElement {
 
 		this.shadow = createShadow();
 
-		const container = createContainer(this.size, this.model.getLineCount());
+		const container = createContainer();
 		this.shadow.appendChild(container);
 
 		this.editor = createEditor(this.model, this.size, container);
-		container.style.height = `${this.editor.getScrollHeight()}px`;
+		container.style.height = `${this.editor.getContentHeight()}px`;
 		this.editor.layout();
 
 		bindEventListeners();
