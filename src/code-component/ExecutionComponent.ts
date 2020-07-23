@@ -1,4 +1,6 @@
 export class ExecutionComponent extends HTMLElement {
+	private static readonly infoText = "This code example is interactive";
+
 	private readonly playButton: HTMLElement;
 	private readonly playInner: HTMLElement;
 	private readonly playingInner: HTMLElement;
@@ -20,7 +22,10 @@ export class ExecutionComponent extends HTMLElement {
 				width: "calc(100% - 17px)",
 				padding: "4px 10px 2px 10px",
 				boxSizing: "border-box",
-				backgroundColor: "#252526"
+				backgroundColor: "#252526",
+				display: "flex",
+				flexDirection: "row",
+				justifyContent: "space-between"
 			} as CSSStyleDeclaration);
 			commandBar.classList.add("monaco-editor");
 			return commandBar;
@@ -68,6 +73,24 @@ export class ExecutionComponent extends HTMLElement {
 
 			return main;
 		};
+		const createInfo: (infoText: string) => HTMLElement = (infoText) => {
+			const main = document.createElement("div");
+			Object.assign(main.style, {
+				fontSize: "0.9em"
+			} as CSSStyleDeclaration);
+
+			main.appendChild(document.createTextNode(infoText));
+
+			const icon = document.createElement("i");
+			Object.assign(icon.style, {
+				marginLeft: "6px",
+				verticalAlign: "middle"
+			} as CSSStyleDeclaration);
+			icon.classList.add("codicon", "codicon-info");
+			main.appendChild(icon);
+
+			return main;
+		};
 		//#endregion Local functions
 
 		super();
@@ -81,6 +104,9 @@ export class ExecutionComponent extends HTMLElement {
 		this.playingInner = createPlayingInner();
 		this.playButton.appendChild(this.playInner);
 		this.playButton.addEventListener("click", this.onPlayClick.bind(this), false);
+
+		const info = createInfo(ExecutionComponent.infoText);
+		commandBar.appendChild(info);
 	}
 
 	private onPlayClick(): void {
