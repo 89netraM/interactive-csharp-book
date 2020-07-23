@@ -1,4 +1,5 @@
 import { editor } from "monaco-editor";
+import { ExecutionComponent } from "./ExecutionComponent";
 
 export class CodeComponent extends HTMLElement {
 	private static readonly sizeAndLineHeightDifference = 5;
@@ -9,6 +10,7 @@ export class CodeComponent extends HTMLElement {
 
 	private readonly model: editor.ITextModel;
 	private readonly editor: editor.IStandaloneCodeEditor;
+	private readonly executioner: ExecutionComponent;
 
 	public readonly language: string;
 
@@ -37,6 +39,9 @@ export class CodeComponent extends HTMLElement {
 			container.style.position = "relative";
 
 			return container;
+		};
+		const createExecutioner: () => ExecutionComponent = () => {
+			return document.createElement("execution-component") as ExecutionComponent;
 		};
 		const extractText: () => string = () => {
 			if (this.childNodes.length > 0) {
@@ -100,6 +105,8 @@ export class CodeComponent extends HTMLElement {
 
 		const container = createContainer();
 		this.appendChild(container);
+		this.executioner = createExecutioner();
+		this.appendChild(this.executioner);
 
 		this.editor = createEditor(this.model, this.size, container);
 		container.style.height = `${this.editor.getContentHeight()}px`;
