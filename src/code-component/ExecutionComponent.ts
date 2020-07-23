@@ -1,6 +1,9 @@
+import { BrowserCSharp } from "browser-csharp";
+
 export class ExecutionComponent extends HTMLElement {
 	private static readonly infoText = "This code example is interactive";
 
+	private readonly commandBar: HTMLElement;
 	private readonly playButton: HTMLElement;
 	private readonly playInner: HTMLElement;
 	private readonly playingInner: HTMLElement;
@@ -95,18 +98,18 @@ export class ExecutionComponent extends HTMLElement {
 
 		super();
 
-		const commandBar = createCommandBar();
-		this.appendChild(commandBar);
+		this.commandBar = createCommandBar();
+		this.appendChild(this.commandBar);
 
 		this.playButton = createPlay();
-		commandBar.appendChild(this.playButton);
+		this.commandBar.appendChild(this.playButton);
 		this.playInner = createPlayInner();
 		this.playingInner = createPlayingInner();
 		this.playButton.appendChild(this.playInner);
 		this.playButton.addEventListener("click", this.play.bind(this), false);
 
 		const info = createInfo(ExecutionComponent.infoText);
-		commandBar.appendChild(info);
+		this.commandBar.appendChild(info);
 	}
 
 	public play(): void {
@@ -124,9 +127,57 @@ export class ExecutionComponent extends HTMLElement {
 		);
 	}
 
+	private showError(message: string): void {
+		const createError: (message: string) => HTMLElement = (message) => {
+			const main = document.createElement("div");
+			Object.assign(main.style, {
+				position: "relative",
+				fontSize: "16px",
+				padding: "1px 6px"
+			} as CSSStyleDeclaration);
+			main.classList.add("zone-widget");
+
+			const errorIcon = document.createElement("i");
+			Object.assign(errorIcon.style, {
+				marginRight: "6px"
+			} as CSSStyleDeclaration);
+			errorIcon.classList.add("codicon", "codicon-error", "codicon-error");
+			main.appendChild(errorIcon);
+
+			main.appendChild(document.createTextNode(message));
+
+			return main;
+		};
+
+		this.commandBar.replaceChild(
+			createError(message),
+			this.playButton
+		);
+	}
+
+	private waitForCSharp(): Promise<boolean> {
+		return new Promise(r => BrowserCSharp.OnReady(r));
+	}
+
 	private async executeCode(): Promise<void> {
 		this.setPlayingState(true);
-		// await ...
-		this.setPlayingState(false);
+
+		const codeToExecute = this.value;
+
+		const success = await this.waitForCSharp();
+		if (success) {
+			const response = await BrowserCSharp.ExecuteScript(codeToExecute)
+			if (response.stdErr != null) {
+				console.warn(response.stdErr);
+			}
+			else {
+				console.log(response.stdOut, response.result);
+			}
+
+			this.setPlayingState(false);
+		}
+		else {
+			this.showError("Couldn't load the C# runtime");
+		}
 	}
 }

@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
 	entry: {
@@ -30,6 +31,14 @@ module.exports = {
 			template: path.resolve(__dirname, "index.html"),
 			title: "Interactive C# Book",
 			base: "/"
+		}),
+		new CopyPlugin({
+			patterns: [
+				{
+					from: path.resolve(__dirname, "node_modules/browser-csharp/out/_framework"),
+					to: "_framework"
+				}
+			]
 		})
 	],
 	devServer: {

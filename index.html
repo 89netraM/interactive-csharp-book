@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title><%= htmlWebpackPlugin.options.title %></title>
+		<script src="_framework/blazor.webassembly.js"></script>
 	</head>
 	<body>
 		<h1><%= htmlWebpackPlugin.options.title %></h1>
@@ -15,6 +16,8 @@ class Program
 		Console.WriteLine("Hello World!");
 	}
 }
+
+Program.Main();
 		</code-component>
 	</body>
 </html>
