@@ -95,6 +95,8 @@ export class CodeComponent extends HTMLElement {
 			};
 
 			bindResizeListener();
+
+			this.editor.getModel().onDidChangeContent(this.updateExecutionerContent.bind(this));
 		};
 		//#endregion Local functions
 
@@ -111,12 +113,17 @@ export class CodeComponent extends HTMLElement {
 		this.editor = createEditor(this.model, this.size, container);
 		container.style.height = `${this.editor.getContentHeight()}px`;
 		this.editor.layout();
+		this.updateExecutionerContent();
 
 		bindEventListeners();
 	}
 
 	private onResize(): void {
 		this.editor.layout();
+	}
+
+	private updateExecutionerContent(): void {
+		this.executioner.value = this.editor.getModel().getValue();
 	}
 
 	public attributeChangedCallback(name: (typeof CodeComponent.observedAttributes)[number], oldValue: string, newValue: string): void {
