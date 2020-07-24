@@ -1,4 +1,5 @@
 import { BrowserCSharp } from "browser-csharp";
+import { LogComponent } from "./LogComponent";
 
 export class ExecutionComponent extends HTMLElement {
 	private static readonly infoText = "This code example is interactive";
@@ -7,6 +8,7 @@ export class ExecutionComponent extends HTMLElement {
 	private readonly playButton: HTMLElement;
 	private readonly playInner: HTMLElement;
 	private readonly playingInner: HTMLElement;
+	private readonly log: LogComponent;
 
 	private isPlaying: boolean;
 
@@ -110,6 +112,9 @@ export class ExecutionComponent extends HTMLElement {
 
 		const info = createInfo(ExecutionComponent.infoText);
 		this.commandBar.appendChild(info);
+
+		this.log = document.createElement("log-component") as LogComponent;
+		this.appendChild(this.log);
 	}
 
 	public play(): void {
@@ -155,6 +160,11 @@ export class ExecutionComponent extends HTMLElement {
 		);
 	}
 
+	private showResult(out: string): void {
+		this.log.visible = true;
+		this.log.value = out;
+	}
+
 	private waitForCSharp(): Promise<boolean> {
 		return new Promise(r => BrowserCSharp.OnReady(r));
 	}
@@ -168,10 +178,19 @@ export class ExecutionComponent extends HTMLElement {
 		if (success) {
 			const response = await BrowserCSharp.ExecuteScript(codeToExecute)
 			if (response.stdErr != null) {
-				console.warn(response.stdErr);
+				this.showResult(
+					response.stdErr.split("\n").filter(x => x.length > 0).map(x => "× " + x).join("\n")
+				);
 			}
 			else {
-				console.log(response.stdOut, response.result);
+				const lines = new Array<string>();
+				if (response.stdOut != null) {
+					lines.push(...response.stdOut.split("\n").filter(x => x.length > 0).map(x => "< " + x));
+				}
+				if (response.result != null) {
+					lines.push(JSON.stringify(response.result));
+				}
+				this.showResult(lines.join("\n"));
 			}
 
 			this.setPlayingState(false);
