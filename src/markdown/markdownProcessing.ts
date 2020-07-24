@@ -1,4 +1,5 @@
 import * as marked from "marked";
+import { insertIntoTemplate } from "./html-template";
 
 const renderer: Partial<marked.Renderer> = {
 	code: (src, language, isEscaped) => {
@@ -11,4 +12,9 @@ const renderer: Partial<marked.Renderer> = {
 export function convertMarkdown(markdown: string): string {
 	marked.use({ renderer: renderer as marked.Renderer });
 	return marked(markdown);
+}
+
+export function markdownToHTMLFile(markdown: string, htmlTemplate: string): string {
+	const markdownHTML = convertMarkdown(markdown);
+	return insertIntoTemplate(markdownHTML, htmlTemplate);
 }
