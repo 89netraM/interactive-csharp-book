@@ -3,6 +3,9 @@ import { LogComponent } from "./LogComponent";
 
 export class ExecutionComponent extends HTMLElement {
 	private static readonly infoText = "This code example is interactive";
+	private static readonly observedAttributes = [
+		"size"
+	] as const;
 
 	private readonly commandBar: HTMLElement;
 	private readonly playButton: HTMLElement;
@@ -17,6 +20,19 @@ export class ExecutionComponent extends HTMLElement {
 	}
 	public set value(value: string) {
 		this.setAttribute("value", value);
+	}
+
+	public get size(): number {
+		return parseInt(this.getAttribute("size")) || 14;
+	}
+	public set size(value: number) {
+		if (this.size !== value) {
+			this.setAttribute("size", value.toString());
+			this.updateSize();
+		}
+	}
+	private updateSize(): void {
+		this.log.size = this.size;
 	}
 
 	public constructor() {
@@ -114,6 +130,7 @@ export class ExecutionComponent extends HTMLElement {
 		this.commandBar.appendChild(info);
 
 		this.log = document.createElement("log-component") as LogComponent;
+		this.log.size = this.size;
 		this.appendChild(this.log);
 	}
 
@@ -197,6 +214,16 @@ export class ExecutionComponent extends HTMLElement {
 		}
 		else {
 			this.showError("Couldn't load the C# runtime");
+		}
+	}
+
+	public attributeChangedCallback(name: (typeof ExecutionComponent.observedAttributes)[number], oldValue: string, newValue: string): void {
+		if (oldValue != null && oldValue !== newValue) {
+			switch (name) {
+				case "size":
+					this.updateSize();
+					break;
+			}
 		}
 	}
 }

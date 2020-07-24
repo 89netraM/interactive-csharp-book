@@ -119,6 +119,7 @@ export class CodeComponent extends HTMLElement {
 		const container = createContainer();
 		this.appendChild(container);
 		this.executioner = createExecutioner();
+		this.executioner.size = this.size;
 		this.appendChild(this.executioner);
 
 		this.editor = createEditor(this.model, this.size, container);
