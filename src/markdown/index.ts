@@ -1,6 +1,6 @@
 import * as fs from "fs";
-import * as marked from "marked";
 import * as path from "path";
+import { convertMarkdown } from "./markdownProcessing";
 
 if (process.argv.length < 3) {
 	console.error("Must provide a markdown file as the first argument.");
@@ -8,7 +8,7 @@ if (process.argv.length < 3) {
 }
 const markdownFile = process.argv[2];
 
-const htmlOutput = marked(fs.readFileSync(markdownFile, "utf8"));
+const htmlOutput = convertMarkdown(fs.readFileSync(markdownFile, "utf8"));
 
 if (process.argv.length >= 4) {
 	const htmlFile = process.argv[3];
