@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { markdownToHTMLFile } from "./markdownProcessing";
 import { findMarkdownsIn } from "./finder";
+import { moveFilesTo } from "./file-mover";
 
 if (process.argv.length < 3) {
 	console.error("Must provide a folder as the first argument.");
@@ -31,6 +32,8 @@ if (process.argv.length >= 5) {
 		x[1],
 		"utf8"
 	));
+
+	moveFilesTo(folder);
 }
 else {
 	htmlOutputs.forEach(x => console.log(x[1]));

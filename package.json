@@ -4,11 +4,13 @@
 	"author": "Mårten Åsberg",
 	"license": "MIT",
 	"dependencies": {
+		"@types/fs-extra": "^9.0.1",
 		"@types/marked": "^1.1.0",
 		"browser-csharp": "^1.1.0",
 		"copy-webpack-plugin": "^6.0.3",
 		"css-loader": "^3.6.0",
 		"file-loader": "^6.0.0",
+		"fs-extra": "^9.0.1",
 		"html-webpack-plugin": "^4.3.0",
 		"marked": "^1.1.1",
 		"monaco-editor": "^0.20.0",
