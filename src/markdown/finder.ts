@@ -1,8 +1,8 @@
-import * as fs from "fs";
-import * as path from "path";
+import { FileIndicator } from "./config-loader";
+import * as glob from "glob";
 
-export function findMarkdownsIn(dir: string): Array<string> {
-	return fs.readdirSync(dir)
-		.filter(x => /.md$/i.test(x))
-		.map(x => path.join(dir, x));
+export function findMarkdownsIn(documents: Array<FileIndicator>): Array<string> {
+	return documents
+		.map(g => glob.sync(g))
+		.reduce((p, c) => p.concat(c), new Array<string>());
 }

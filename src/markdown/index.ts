@@ -3,32 +3,20 @@ import * as path from "path";
 import { markdownsToHTMLFiles } from "./markdownProcessing";
 import { findMarkdownsIn } from "./finder";
 import { moveFilesTo } from "./file-mover";
+import { loadConfig } from "./config-loader";
 
-if (process.argv.length < 3) {
-	console.error("Must provide a folder as the first argument.");
-	process.exit(1);
-}
-const markdownFiles = findMarkdownsIn(process.argv[2]);
+const config = loadConfig(process.argv.length >= 3 ? process.argv[2] : null);
 
-if (process.argv.length < 4) {
-	console.error("Must provide a html file as the second argument.");
-	process.exit(1);
-}
-const htmlTemplate = fs.readFileSync(process.argv[3], "utf8");
+const markdownFiles = findMarkdownsIn(config.documents);
+const htmlTemplate = fs.readFileSync(config.template, "utf8");
 
 const htmlOutputs = markdownsToHTMLFiles(markdownFiles, htmlTemplate);
 
-if (process.argv.length >= 5) {
-	const folder = process.argv[4];
-	fs.mkdirSync(folder, { recursive: true });
-	htmlOutputs.forEach(x => fs.writeFileSync(
-		path.join(folder, x[0]),
-		x[1],
-		"utf8"
-	));
+fs.mkdirSync(config.outDir, { recursive: true });
+htmlOutputs.forEach(x => fs.writeFileSync(
+	path.join(config.outDir, x[0]),
+	x[1],
+	"utf8"
+));
 
-	moveFilesTo(folder);
-}
-else {
-	htmlOutputs.forEach(x => console.log(x[1]));
-}
+moveFilesTo(config.outDir);
