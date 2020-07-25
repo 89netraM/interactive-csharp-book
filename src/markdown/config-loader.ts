@@ -1,4 +1,5 @@
 import * as fs from "fs-extra";
+import * as path from "path";
 
 export type FileIndicator = string;
 
@@ -21,5 +22,11 @@ export function loadConfig(configPath?: string): Config {
 		}
 	}
 
-	return fs.readJSONSync(configPath);
+	const loadedConfig: Config = fs.readJSONSync(configPath);
+	const relativePath = path.relative("./", path.dirname(configPath));
+	if (relativePath.length > 0) {
+		loadedConfig.documents = loadedConfig.documents
+			.map(g => path.join(relativePath, g));
+	}
+	return loadedConfig;
 }

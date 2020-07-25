@@ -1,0 +1,10 @@
+{
+	"template": "index.html",
+	"documents": [
+		"Title Page.md",
+		"Introduction.md",
+		"*([0-9]). *.md",
+		"Epilogue.md"
+	],
+	"outDir": "testDist"
+}
