@@ -4,6 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { fileToName, fileToHTMLFile } from "./file-to-name";
 import { Config } from "./config-loader";
+import { MArray } from "./MArray";
 
 const renderer: Partial<marked.Renderer> = {
 	code: (src, language, isEscaped) => {
@@ -23,38 +24,70 @@ export function markdownToHTMLFile(markdown: string, nav: Nav, config: Config, h
 	return insertIntoTemplate(markdownHTML, nav, config, htmlTemplate);
 }
 
+export function TOCToHTMLFile(navs: Array<Nav>, nav: Nav, config: Config, htmlTemplate: string): string {
+	function navToLink(nav: Nav): string {
+		return `<li><a href="${fileToHTMLFile(nav.file)}">${fileToName(nav.file)}</a></li>`;
+	}
+
+	const html = `
+		<h2>Table of Contents</h2>
+		<ol>
+			${navs.map(navToLink).join("")}
+		</ol>
+	`;
+	return insertIntoTemplate(html, nav, config, htmlTemplate);
+}
+
 export function markdownsToHTMLFiles(markdownFiles: Array<string>, htmlTemplate: string, config: Config): Array<[string, string]> {
 	const htmlOutputs = new Array<[string, string]>();
 
-	let previousNav: Nav;
+	let tocIndex = -1;
+
+	const record = new MArray<Nav>();
 	for (let i = 0; i < markdownFiles.length; i++) {
+		if (markdownFiles[i] === "!toc!") {
+			tocIndex = i;
+		}
+
 		let previous: NavItem = null;
-		if (previousNav != null) {
+		if (record.last != null) {
 			previous = {
-				name: fileToName(previousNav.file),
-				href: fileToHTMLFile(previousNav.file)
+				name: fileToName(record.last.file),
+				href: fileToHTMLFile(record.last.file)
 			};
 
-			previousNav.next = {
+			record.last.next = {
 				name: fileToName(markdownFiles[i]),
 				href: fileToHTMLFile(markdownFiles[i])
 			};
 
-			htmlOutputs.push([
-				fileToHTMLFile(previousNav.file),
-				markdownToHTMLFile(fs.readFileSync(previousNav.file, "utf8"), previousNav, config, htmlTemplate)
-			]);
+			if (record.last.file === "!toc!") {
+				htmlOutputs.push(null);
+			}
+			else {
+				htmlOutputs.push([
+					fileToHTMLFile(record.last.file),
+					markdownToHTMLFile(fs.readFileSync(record.last.file, "utf8"), record.last, config, htmlTemplate)
+				]);
+			}
 		}
-		previousNav = {
+		record.push({
 			previous,
 			file: markdownFiles[i]
-		};
+		});
 	}
-	if (previousNav != null) {
+	if (record.last != null) {
 		htmlOutputs.push([
-			fileToHTMLFile(previousNav.file),
-			markdownToHTMLFile(fs.readFileSync(previousNav.file, "utf8"), previousNav, config, htmlTemplate)
+			fileToHTMLFile(record.last.file),
+			markdownToHTMLFile(fs.readFileSync(record.last.file, "utf8"), record.last, config, htmlTemplate)
 		]);
+	}
+
+	if (tocIndex !== -1) {
+		htmlOutputs[tocIndex] = [
+			fileToHTMLFile(record[tocIndex].file),
+			TOCToHTMLFile(record, record[tocIndex], config, htmlTemplate)
+		];
 	}
 
 	return htmlOutputs;

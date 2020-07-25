@@ -3,6 +3,7 @@
 	"title": "Interactive C# Book",
 	"documents": [
 		"Title Page.md",
+		"!toc!",
 		"Introduction.md",
 		"*([0-9]). *.md",
 		"Epilogue.md"

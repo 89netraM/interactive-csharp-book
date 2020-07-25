@@ -3,6 +3,6 @@ import * as glob from "glob";
 
 export function findMarkdownsIn(documents: Array<FileIndicator>): Array<string> {
 	return documents
-		.map(g => glob.sync(g))
+		.map(g => g.endsWith("!toc!") ? new Array<string>("!toc!") : glob.sync(g))
 		.reduce((p, c) => p.concat(c), new Array<string>());
 }

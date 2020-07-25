@@ -1,9 +1,19 @@
 import * as path from "path";
 
 export function fileToName(fileName: string): string {
-	return path.basename(fileName, path.extname(fileName));
+	if (fileName === "!toc!") {
+		return "Table of Contents";
+	}
+	else {
+		return path.basename(fileName, path.extname(fileName));
+	}
 }
 
 export function fileToHTMLFile(fileName: string): string {
-	return `${fileToName(fileName).replace(/\W+/g, "-").toLowerCase()}.html`;
+	if (fileName === "!toc!") {
+		return "toc.html";
+	}
+	else {
+		return `${fileToName(fileName).replace(/\W+/g, "-").toLowerCase()}.html`;
+	}
 }

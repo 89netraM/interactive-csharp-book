@@ -1,7 +1,7 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 
-export type FileIndicator = string;
+export type FileIndicator = "!toc!" | string;
 
 export interface Config {
 	template: string;
