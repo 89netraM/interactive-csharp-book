@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { markdownToHTMLFile } from "./markdownProcessing";
+import { markdownsToHTMLFiles } from "./markdownProcessing";
 import { findMarkdownsIn } from "./finder";
 import { moveFilesTo } from "./file-mover";
 
@@ -14,15 +14,9 @@ if (process.argv.length < 4) {
 	console.error("Must provide a html file as the second argument.");
 	process.exit(1);
 }
-const htmlTemplate = process.argv[3];
+const htmlTemplate = fs.readFileSync(process.argv[3], "utf8");
 
-const htmlOutputs = markdownFiles.map(x => [
-	path.basename(x, ".md"),
-	markdownToHTMLFile(
-		fs.readFileSync(x, "utf8"),
-		fs.readFileSync(htmlTemplate, "utf8")
-	)
-]);
+const htmlOutputs = markdownsToHTMLFiles(markdownFiles, htmlTemplate);
 
 if (process.argv.length >= 5) {
 	const folder = process.argv[4];
