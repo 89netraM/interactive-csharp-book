@@ -1,5 +1,6 @@
 {
 	"template": "index.html",
+	"title": "Interactive C# Book",
 	"documents": [
 		"Title Page.md",
 		"Introduction.md",

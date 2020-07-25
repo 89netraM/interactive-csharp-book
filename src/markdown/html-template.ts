@@ -1,4 +1,5 @@
 import { fileToName } from "./file-to-name";
+import { Config } from "./config-loader";
 
 const headInjections = [
 	`<script defer src="_framework/blazor.webassembly.js"></script>`,
@@ -15,12 +16,13 @@ export interface Nav {
 	next?: NavItem;
 }
 
-export function insertIntoTemplate(markdownHTML: string, nav: Nav, template: string): string {
+export function insertIntoTemplate(markdownHTML: string, nav: Nav, config: Config, template: string): string {
 	let html = template;
 
 	html = html.replace(/<!-- CONTENT -->/g, markdownHTML);
 	html = html.replace(/<!-- HEAD -->/g, headInjections);
 	html = insertNavLinks(html, nav);
+	html = html.replace(/<!-- TITLE -->/g, config.title);
 	html = html.replace(/<!-- PAGE-NAME -->/g, fileToName(nav.file));
 
 	return html;

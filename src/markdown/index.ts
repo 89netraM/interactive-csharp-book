@@ -10,7 +10,7 @@ const config = loadConfig(process.argv.length >= 3 ? process.argv[2] : null);
 const markdownFiles = findMarkdownsIn(config.documents);
 const htmlTemplate = fs.readFileSync(config.template, "utf8");
 
-const htmlOutputs = markdownsToHTMLFiles(markdownFiles, htmlTemplate);
+const htmlOutputs = markdownsToHTMLFiles(markdownFiles, htmlTemplate, config);
 
 fs.mkdirSync(config.outDir, { recursive: true });
 htmlOutputs.forEach(x => fs.writeFileSync(

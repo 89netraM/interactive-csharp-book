@@ -5,6 +5,7 @@ export type FileIndicator = string;
 
 export interface Config {
 	template: string;
+	title: string;
 	documents: Array<FileIndicator>;
 	outDir: string;
 }
