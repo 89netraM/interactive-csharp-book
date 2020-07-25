@@ -1,6 +1,6 @@
 const headInjections = [
-	`<script src="_framework/blazor.webassembly.js"></script>`,
-	`<script src="code-component.js"></script>`
+	`<script defer src="_framework/blazor.webassembly.js"></script>`,
+	`<script defer src="code-component/main.js"></script>`
 ].join("");
 
 export function insertIntoTemplate(markdownHTML: string, template: string): string {

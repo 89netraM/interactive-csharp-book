@@ -1,12 +1,8 @@
 const path = require("path");
-const HtmlPlugin = require("html-webpack-plugin");
-const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-	entry: {
-		"code-component": path.resolve(__dirname, "src/code-component/index.ts")
-	},
-	mode: "development",
+	entry: path.resolve(__dirname, "src/code-component/index.ts"),
+	mode: "production",
 	module: {
 		rules: [
 			{
@@ -26,23 +22,9 @@ module.exports = {
 	resolve: {
 		extensions: [ ".ts", ".js" ]
 	},
-	plugins: [
-		new HtmlPlugin({
-			template: path.resolve(__dirname, "index.html"),
-			title: "Interactive C# Book",
-			base: "/"
-		}),
-		new CopyPlugin({
-			patterns: [
-				{
-					from: path.resolve(__dirname, "node_modules/browser-csharp/out/_framework"),
-					to: "_framework"
-				}
-			]
-		})
-	],
-	devServer: {
-		contentBase: path.resolve(__dirname, "dist"),
-		port: 9090
+	output: {
+		path: path.resolve(__dirname, "dist/client/"),
+		publicPath: "code-component/",
+		chunkFilename: "[id].chunk.js"
 	}
 };

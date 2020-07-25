@@ -9,8 +9,8 @@ type Moveables = ReadonlyArray<Moveable>;
 
 const things: Moveables = [
 	{
-		from: "./code-component.js",
-		to: "./code-component.js"
+		from: "./client",
+		to: "./code-component"
 	},
 	{
 		from: "../node_modules/browser-csharp/out/_framework",
