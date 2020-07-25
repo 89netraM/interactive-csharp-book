@@ -35,7 +35,6 @@ export class CodeComponent extends HTMLElement {
 		const createContainer: () => HTMLElement = () => {
 			const container = document.createElement("div");
 			container.style.width = "100%";
-			container.style.height = "9999px";
 			container.style.position = "relative";
 
 			return container;

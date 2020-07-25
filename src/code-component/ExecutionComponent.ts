@@ -40,7 +40,7 @@ export class ExecutionComponent extends HTMLElement {
 		const createCommandBar: () => HTMLElement = () => {
 			const commandBar = document.createElement("div");
 			Object.assign(commandBar.style, {
-				width: "calc(100% - 17px)",
+				width: "100%",
 				padding: "4px 10px 2px 10px",
 				boxSizing: "border-box",
 				backgroundColor: "#252526",

@@ -73,7 +73,7 @@ export class LogComponent extends HTMLElement {
 					box-sizing: border-box;
 				}
 				ol {
-					width: calc(100% - 17px);
+					width: 100%;
 					position: relative;
 					overflow-y: auto;
 					padding: 10px calc(2ch + 20px);
