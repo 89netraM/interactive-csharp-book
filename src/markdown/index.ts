@@ -22,7 +22,7 @@ if (process.argv.length >= 5) {
 	const folder = process.argv[4];
 	fs.mkdirSync(folder, { recursive: true });
 	htmlOutputs.forEach(x => fs.writeFileSync(
-		path.join(folder, `${x[0]}.html`),
+		path.join(folder, x[0]),
 		x[1],
 		"utf8"
 	));

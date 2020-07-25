@@ -2,6 +2,7 @@ import * as marked from "marked";
 import { insertIntoTemplate, Nav, NavItem } from "./html-template";
 import * as fs from "fs";
 import * as path from "path";
+import { fileToName, fileToHTMLFile } from "./file-to-name";
 
 const renderer: Partial<marked.Renderer> = {
 	code: (src, language, isEscaped) => {
@@ -24,24 +25,22 @@ export function markdownToHTMLFile(markdown: string, nav: Nav, htmlTemplate: str
 export function markdownsToHTMLFiles(markdownFiles: Array<string>, htmlTemplate: string): Array<[string, string]> {
 	const htmlOutputs = new Array<[string, string]>();
 
-	let previousNav: Nav & { file: string };
+	let previousNav: Nav;
 	for (let i = 0; i < markdownFiles.length; i++) {
 		let previous: NavItem = null;
 		if (previousNav != null) {
-			const previousName = path.basename(previousNav.file, path.extname(previousNav.file));
 			previous = {
-				name: previousName,
-				href: previousName + ".html"
+				name: fileToName(previousNav.file),
+				href: fileToHTMLFile(previousNav.file)
 			};
 
-			const currentName = path.basename(markdownFiles[i], path.extname(markdownFiles[i]));
 			previousNav.next = {
-				name: currentName,
-				href: currentName + ".html"
+				name: fileToName(markdownFiles[i]),
+				href: fileToHTMLFile(markdownFiles[i])
 			};
 
 			htmlOutputs.push([
-				path.basename(previousNav.file, path.extname(previousNav.file)),
+				fileToHTMLFile(previousNav.file),
 				markdownToHTMLFile(fs.readFileSync(previousNav.file, "utf8"), previousNav, htmlTemplate)
 			]);
 		}
@@ -52,7 +51,7 @@ export function markdownsToHTMLFiles(markdownFiles: Array<string>, htmlTemplate:
 	}
 	if (previousNav != null) {
 		htmlOutputs.push([
-			path.basename(previousNav.file, path.extname(previousNav.file)),
+			fileToHTMLFile(previousNav.file),
 			markdownToHTMLFile(fs.readFileSync(previousNav.file, "utf8"), previousNav, htmlTemplate)
 		]);
 	}
