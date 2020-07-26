@@ -1,7 +1,10 @@
 {
 	"template": "../index.html",
-	"title": "",
+	"title": "C# Secrets",
 	"documents": [
+		"Title Page.md",
+		"!toc!",
+		"*.md"
 	],
 	"outDir": "../bookDist"
 }
