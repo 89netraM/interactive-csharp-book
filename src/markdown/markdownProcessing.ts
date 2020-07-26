@@ -26,7 +26,7 @@ export function markdownToHTMLFile(markdown: string, nav: Nav, config: Config, h
 
 export function TOCToHTMLFile(navs: Array<Nav>, nav: Nav, config: Config, htmlTemplate: string): string {
 	function navToLink(nav: Nav): string {
-		return `<li><a href="${fileToHTMLFile(nav.file)}">${fileToName(nav.file)}</a></li>`;
+		return `<li><a href="${fileToHTMLFile(nav.file, nav.index)}">${fileToName(nav.file)}</a></li>`;
 	}
 
 	const html = `
@@ -53,12 +53,12 @@ export function markdownsToHTMLFiles(markdownFiles: Array<string>, htmlTemplate:
 		if (record.last != null) {
 			previous = {
 				name: fileToName(record.last.file),
-				href: fileToHTMLFile(record.last.file)
+				href: fileToHTMLFile(record.last.file, record.last.index)
 			};
 
 			record.last.next = {
 				name: fileToName(markdownFiles[i]),
-				href: fileToHTMLFile(markdownFiles[i])
+				href: fileToHTMLFile(markdownFiles[i], i)
 			};
 
 			if (record.last.file === "!toc!") {
@@ -66,26 +66,27 @@ export function markdownsToHTMLFiles(markdownFiles: Array<string>, htmlTemplate:
 			}
 			else {
 				htmlOutputs.push([
-					fileToHTMLFile(record.last.file),
+					fileToHTMLFile(record.last.file, record.last.index),
 					markdownToHTMLFile(fs.readFileSync(record.last.file, "utf8"), record.last, config, htmlTemplate)
 				]);
 			}
 		}
 		record.push({
 			previous,
-			file: markdownFiles[i]
+			file: markdownFiles[i],
+			index: i
 		});
 	}
 	if (record.last != null) {
 		htmlOutputs.push([
-			fileToHTMLFile(record.last.file),
+			fileToHTMLFile(record.last.file, record.last.index),
 			markdownToHTMLFile(fs.readFileSync(record.last.file, "utf8"), record.last, config, htmlTemplate)
 		]);
 	}
 
 	if (tocIndex !== -1) {
 		htmlOutputs[tocIndex] = [
-			fileToHTMLFile(record[tocIndex].file),
+			fileToHTMLFile(record[tocIndex].file, tocIndex),
 			TOCToHTMLFile(record, record[tocIndex], config, htmlTemplate)
 		];
 	}

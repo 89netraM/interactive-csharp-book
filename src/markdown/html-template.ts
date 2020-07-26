@@ -13,6 +13,7 @@ export interface NavItem {
 export interface Nav {
 	previous?: NavItem;
 	file: string;
+	index: number;
 	next?: NavItem;
 }
 

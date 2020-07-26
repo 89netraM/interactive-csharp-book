@@ -9,8 +9,11 @@ export function fileToName(fileName: string): string {
 	}
 }
 
-export function fileToHTMLFile(fileName: string): string {
-	if (fileName === "!toc!") {
+export function fileToHTMLFile(fileName: string, index: number): string {
+	if (index === 0) {
+		return "index.html";
+	}
+	else if (fileName === "!toc!") {
 		return "toc.html";
 	}
 	else {
