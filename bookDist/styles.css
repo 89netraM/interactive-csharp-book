@@ -1,0 +1,142 @@
+html, body {
+	margin: 0px;
+	padding: 0px;
+}
+* {
+	box-sizing: border-box;
+}
+
+body {
+	--max-width: 800px;
+
+	width: 100%;
+	min-height: 100%;
+	position: absolute;
+	padding: 0px 10px;
+
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
+@media screen and (orientation: landscape) {
+	body {
+		padding: 0px;
+	}
+}
+
+/* main */
+main {
+	width: 100%;
+	max-width: var(--max-width);
+}
+@media screen and (orientation: landscape) {
+	main {
+		padding: 0px 20px;
+	}
+}
+
+/* blockquote */
+blockquote {
+	border-left: 5px solid #c9c9c9;
+	background-color: #f9f9f9;
+	margin: 1em 10px;
+	padding: 5px 10px;
+}
+blockquote > *:first-child {
+	margin-top: 0px;
+}
+blockquote > *:last-child {
+	margin-bottom: 0px;
+}
+
+/* TOC */
+main > ol {
+	list-style: none;
+	padding-left: 20px;
+	font-size: 110%;
+}
+main > ol > li {
+	margin-bottom: 10px;
+}
+@media screen and (orientation: landscape) {
+	main > ol > li {
+		margin-bottom: 5px;
+	}
+}
+
+/* code-component */
+code-component {
+	display: block;
+	margin: 0px 20px;
+
+	white-space: pre;
+	font-family: Consolas, 'Courier New', Courier, monospace;
+
+	background-color: #1e1e1e;
+	color: #d4d4d4;
+}
+
+/* footer */
+footer {
+	--nav-color: #424242;
+
+	width: 100%;
+	max-width: var(--max-width);
+	margin-top: 30px;
+	margin-bottom: 20px;
+
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-areas:
+		"center center"
+		"left right";
+	row-gap: 30px;
+}
+footer > div:first-child {
+	grid-area: left;
+	justify-self: left;
+}
+footer > div:nth-child(2) {
+	grid-area: center;
+	justify-self: center;
+}
+footer > div:last-child {
+	grid-area: right;
+	justify-self: right;
+}
+@media screen and (orientation: landscape) {
+	footer {
+		margin-bottom: 30px;
+
+		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-areas: "left center right";
+	}
+}
+
+footer > div > a {
+	padding: 10px 20px;
+	border: 2px solid var(--nav-color);
+	border-radius: 6px;
+
+	text-decoration: none;
+	color: var(--nav-color);
+	font-weight: bold;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+footer > div:first-child > a::before {
+	content: "\276E";
+	padding-right: 1ch;
+	font-size: 90%;
+	vertical-align: top;
+}
+footer > div:last-child > a::after {
+	content: "\276F";
+	padding-left: 1ch;
+	font-size: 90%;
+	vertical-align: top;
+}
