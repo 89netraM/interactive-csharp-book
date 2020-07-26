@@ -1,12 +1,7 @@
 {
 	"template": "../index.html",
-	"title": "Interactive C# Book",
+	"title": "",
 	"documents": [
-		"Title Page.md",
-		"!toc!",
-		"Introduction.md",
-		"*([0-9]). *.md",
-		"Epilogue.md"
 	],
 	"outDir": "../bookDist"
 }
