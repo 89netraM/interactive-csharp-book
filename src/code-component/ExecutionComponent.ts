@@ -202,10 +202,10 @@ export class ExecutionComponent extends HTMLElement {
 			else {
 				const lines = new Array<string>();
 				if (response.stdOut != null) {
-					lines.push(...response.stdOut.split("\n").filter(x => x.length > 0).map(x => "< " + x));
+					lines.push(...response.stdOut.split("\n").filter(x => x.length > 0));
 				}
 				if (response.result != null) {
-					lines.push(JSON.stringify(response.result));
+					lines.push("< " + JSON.stringify(response.result));
 				}
 				this.showResult(lines.join("\n"));
 			}
