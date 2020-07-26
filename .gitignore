@@ -89,3 +89,7 @@ typings/
 
 testDist/
 dist/
+
+# Book Dist folder
+bookDist/*
+!bookDist/styles.css

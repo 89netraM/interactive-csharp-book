@@ -8,5 +8,5 @@
 		"*([0-9]). *.md",
 		"Epilogue.md"
 	],
-	"outDir": "../testDist"
+	"outDir": "../bookDist"
 }

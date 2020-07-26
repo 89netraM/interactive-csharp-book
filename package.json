@@ -5,7 +5,9 @@
 	"license": "MIT",
 	"scripts": {
 		"build-cli": "tsc -p tsconfig.cli.json",
-		"build-client": "webpack-cli"
+		"build-client": "webpack-cli",
+		"clean-book": "git clean -dfx bookDist",
+		"clean-code": "git clean -dfx dist"
 	},
 	"dependencies": {
 		"@types/fs-extra": "^9.0.1",
