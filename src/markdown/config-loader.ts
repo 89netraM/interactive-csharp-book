@@ -26,8 +26,10 @@ export function loadConfig(configPath?: string): Config {
 	const loadedConfig: Config = fs.readJSONSync(configPath);
 	const relativePath = path.relative("./", path.dirname(configPath));
 	if (relativePath.length > 0) {
+		loadedConfig.template = path.join(relativePath, loadedConfig.template);
 		loadedConfig.documents = loadedConfig.documents
 			.map(g => path.join(relativePath, g));
+		loadedConfig.outDir = path.join(relativePath, loadedConfig.outDir);
 	}
 	return loadedConfig;
 }
