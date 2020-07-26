@@ -13,8 +13,8 @@ const htmlTemplate = fs.readFileSync(config.template, "utf8");
 const htmlOutputs = markdownsToHTMLFiles(markdownFiles, htmlTemplate, config);
 
 fs.mkdirSync(config.outDir, { recursive: true });
-htmlOutputs.forEach(x => fs.writeFileSync(
-	path.join(config.outDir, x[0]),
+htmlOutputs.forEach((x, i) => fs.writeFileSync(
+	path.join(config.outDir, i === 0 ? "index.html" : x[0]),
 	x[1],
 	"utf8"
 ));
