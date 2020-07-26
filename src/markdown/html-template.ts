@@ -17,21 +17,22 @@ export interface Nav {
 	next?: NavItem;
 }
 
-export function insertIntoTemplate(markdownHTML: string, nav: Nav, config: Config, template: string): string {
+export function insertIntoTemplate(markdownHTML: string, nav: Nav, config: Config, template: string, hasTOC: boolean): string {
 	let html = template;
 
 	html = html.replace(/<!-- CONTENT -->/g, markdownHTML);
 	html = html.replace(/<!-- HEAD -->/g, headInjections);
-	html = insertNavLinks(html, nav);
+	html = insertNavLinks(html, nav, hasTOC);
 	html = html.replace(/<!-- TITLE -->/g, config.title);
 	html = html.replace(/<!-- PAGE-NAME -->/g, fileToName(nav.file));
 
 	return html;
 }
 
-function insertNavLinks(html: string, nav: Nav): string {
+function insertNavLinks(html: string, nav: Nav, hasTOC: boolean): string {
 	html = html.replace(/<!-- PREVIOUS -->/g, nav.previous ? `<a href="./${nav.previous.href}">${nav.previous.name}</a>` : "");
 	html = html.replace(/<!-- NEXT -->/g, nav.next ? `<a href="./${nav.next.href}">${nav.next.name}</a>` : "");
+	html = html.replace(/<!-- TOC-LINK -->/g, hasTOC ? `<a href="./toc.html">Table of Contents</a>` : "");
 
 	return html;
 }

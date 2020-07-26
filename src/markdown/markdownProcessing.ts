@@ -19,9 +19,9 @@ export function convertMarkdown(markdown: string): string {
 	return marked(markdown);
 }
 
-export function markdownToHTMLFile(markdown: string, nav: Nav, config: Config, htmlTemplate: string): string {
+export function markdownToHTMLFile(markdown: string, nav: Nav, config: Config, htmlTemplate: string, hasTOC: boolean): string {
 	const markdownHTML = convertMarkdown(markdown);
-	return insertIntoTemplate(markdownHTML, nav, config, htmlTemplate);
+	return insertIntoTemplate(markdownHTML, nav, config, htmlTemplate, hasTOC);
 }
 
 export function TOCToHTMLFile(navs: Array<Nav>, nav: Nav, config: Config, htmlTemplate: string): string {
@@ -35,20 +35,16 @@ export function TOCToHTMLFile(navs: Array<Nav>, nav: Nav, config: Config, htmlTe
 			${navs.map(navToLink).join("")}
 		</ol>
 	`;
-	return insertIntoTemplate(html, nav, config, htmlTemplate);
+	return insertIntoTemplate(html, nav, config, htmlTemplate, false);
 }
 
 export function markdownsToHTMLFiles(markdownFiles: Array<string>, htmlTemplate: string, config: Config): Array<[string, string]> {
 	const htmlOutputs = new Array<[string, string]>();
 
-	let tocIndex = -1;
+	const tocIndex = markdownFiles.indexOf("!toc!");
 
 	const record = new MArray<Nav>();
 	for (let i = 0; i < markdownFiles.length; i++) {
-		if (markdownFiles[i] === "!toc!") {
-			tocIndex = i;
-		}
-
 		let previous: NavItem = null;
 		if (record.last != null) {
 			previous = {
@@ -67,7 +63,7 @@ export function markdownsToHTMLFiles(markdownFiles: Array<string>, htmlTemplate:
 			else {
 				htmlOutputs.push([
 					fileToHTMLFile(record.last.file, record.last.index),
-					markdownToHTMLFile(fs.readFileSync(record.last.file, "utf8"), record.last, config, htmlTemplate)
+					markdownToHTMLFile(fs.readFileSync(record.last.file, "utf8"), record.last, config, htmlTemplate, tocIndex !== -1)
 				]);
 			}
 		}
@@ -80,7 +76,7 @@ export function markdownsToHTMLFiles(markdownFiles: Array<string>, htmlTemplate:
 	if (record.last != null) {
 		htmlOutputs.push([
 			fileToHTMLFile(record.last.file, record.last.index),
-			markdownToHTMLFile(fs.readFileSync(record.last.file, "utf8"), record.last, config, htmlTemplate)
+			markdownToHTMLFile(fs.readFileSync(record.last.file, "utf8"), record.last, config, htmlTemplate, tocIndex !== -1)
 		]);
 	}
 
