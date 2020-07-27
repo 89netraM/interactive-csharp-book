@@ -67,6 +67,11 @@ main > ol.toc > li {
 	}
 }
 
+/* code */
+code {
+	color: #c95959;
+}
+
 /* code-component */
 code-component {
 	display: block;
