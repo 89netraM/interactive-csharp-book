@@ -13,7 +13,7 @@
 		"@types/fs-extra": "^9.0.1",
 		"@types/glob": "^7.1.3",
 		"@types/marked": "^1.1.0",
-		"browser-csharp": "^1.1.1",
+		"browser-csharp": "^1.1.2",
 		"css-loader": "^3.6.0",
 		"file-loader": "^6.0.0",
 		"fs-extra": "^9.0.1",
