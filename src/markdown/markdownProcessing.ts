@@ -31,7 +31,7 @@ export function TOCToHTMLFile(navs: Array<Nav>, nav: Nav, config: Config, htmlTe
 
 	const html = `
 		<h2>Table of Contents</h2>
-		<ol>
+		<ol class="toc">
 			${navs.map(navToLink).join("")}
 		</ol>
 	`;
