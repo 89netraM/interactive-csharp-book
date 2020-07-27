@@ -53,18 +53,23 @@ blockquote > *:last-child {
 }
 
 /* TOC */
-main > ol {
+main > ol.toc {
 	list-style: none;
 	padding-left: 20px;
 	font-size: 110%;
 }
-main > ol > li {
+main > ol.toc > li {
 	margin-bottom: 10px;
 }
 @media screen and (orientation: landscape) {
-	main > ol > li {
+	main > ol.toc > li {
 		margin-bottom: 5px;
 	}
+}
+
+/* code */
+code {
+	color: #c95959;
 }
 
 /* code-component */

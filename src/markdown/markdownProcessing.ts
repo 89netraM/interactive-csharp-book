@@ -1,15 +1,15 @@
 import * as marked from "marked";
 import { insertIntoTemplate, Nav, NavItem } from "./html-template";
 import * as fs from "fs";
-import * as path from "path";
 import { fileToName, fileToHTMLFile } from "./file-to-name";
 import { Config } from "./config-loader";
 import { MArray } from "./MArray";
+import { escapeHtml } from "./html-escape";
 
 const renderer: Partial<marked.Renderer> = {
 	code: (src, language, isEscaped) => {
 		return `<code-component language="${language}" size="16">${
-				src
+				isEscaped ? src : escapeHtml(src)
 			}</code-component>`;
 	}
 };
@@ -31,7 +31,7 @@ export function TOCToHTMLFile(navs: Array<Nav>, nav: Nav, config: Config, htmlTe
 
 	const html = `
 		<h2>Table of Contents</h2>
-		<ol>
+		<ol class="toc">
 			${navs.map(navToLink).join("")}
 		</ol>
 	`;
