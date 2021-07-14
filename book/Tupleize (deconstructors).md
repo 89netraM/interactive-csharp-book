@@ -60,6 +60,31 @@ since the compiler can't know which deconstructor to use.
 --------------------------------------------------------------------------------
 
 You can also define deconstructors as extension methods. For when you don't want
-to or can't change an existing class.  
-Just write a regular extension method, and call it `Deconstruct` and with all
-the same arguments as in the example above.
+to or can't change an existing class. It looks pretty much the same.
+
+```csharp
+class Address
+{
+	public string Street { get; set; }
+	public int StreetNumber { get; set; }
+	public bool IsApartment { get; set; }
+
+	public Address(string street, int streetNumber, bool isApartment)
+	{
+		Street = street;
+		StreetNumber = streetNumber;
+		IsApartment = isApartment;
+	}
+}
+
+static void Deconstruct(this Address address, out string street, out int streetNumber, out bool isApartment)
+{
+	street = address.Street;
+	streetNumber = address.StreetNumber;
+	isApartment = address.IsApartment;
+}
+
+Address address = new Address("Hello", 42, false);
+var (street, streetNumber, isApartment) = address;
+Console.WriteLine("{0}, {1}, {2}", street, streetNumber, isApartment);
+```
